@@ -1,5 +1,3 @@
-#include <TM1637Display.h>
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
@@ -35,20 +33,20 @@ void showNum(int n)
 
 void showNumDim(int n)
 {
-  display.setBrightness(0x00); //need this or nothing displayed
+  display.setBrightness(0x00); 
   display.showNumberDec(n, false, 4, 0);
 }
 
 void displayOff()
 {
-  display.setBrightness(0x00,false); //need this or nothing displayed
+  display.setBrightness(0x00,false);  
 }
 
 void tick()
 {
   //toggle state
-  int state = digitalRead(BUILTIN_LED);  // get the current state of GPIO1 pin
-  digitalWrite(BUILTIN_LED, !state);     // set pin to the opposite state
+  int state = digitalRead(BUILTIN_LED);
+  digitalWrite(BUILTIN_LED, !state);
 }
 
 void doDelays() {
@@ -90,7 +88,6 @@ void setup() {
     delay(1000);
   }
 
-  //WiFiMulti.addAP(ssid, password);
   USE_SERIAL.println(WiFi.localIP());
   fullUrl = findIp();
 }
@@ -108,11 +105,14 @@ int parseJson(String payload) {
   int watts = root["Body"]["Data"]["PAC"]["Values"]["1"];
   return watts;
 }
+
 String findIp() {
   String network = String(WiFi.localIP()[0])+"."+String(WiFi.localIP()[1])+"."+String(WiFi.localIP()[2])+".";
   USE_SERIAL.println("Scanning: " + network);
+
   HTTPClient http;
   http.setTimeout(500);
+  
   for (int x=0;x<5;x++) {
     for (int i=1;i<255;i++) {
       String ip = network + String(i);
@@ -131,6 +131,7 @@ String findIp() {
     }
   }
 }
+
 void loop() {
   // wait for WiFi connection
   if ((WiFiMulti.run() == WL_CONNECTED)) {
